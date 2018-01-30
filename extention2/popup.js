@@ -106,79 +106,27 @@ function saveBackgroundColor(url, color) {
 document.addEventListener('DOMContentLoaded', () => {
   getCurrentTabUrl((url) => {
 
-    var dropdown = document.getElementById('dropdown');
+//https://md5db.net/explore/ae46
 
-       document.getElementById("url_holder").innerHTML ="Looking at:<b>"+urlAdd(url,"")+"</b>";
+//https://md5db.net/api/5d41402abc4b2a76b9719d911017c592
+
 
 
         //document.getElementById("cookie_holder").innerHTML ="@getCookies. Cookies found " +  cookies.length;
 
     var flag_cout=0;
+
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", urlAdd(url,"robots.txt"), true);
+    xhr.open("GET","https://md5db.net/api/5d41402abc4b2a76b9719d911017c592", true);
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         // innerText does not let the attacker inject HTML elements.
         var content=xhr.responseText;
-        if(content.match(new RegExp("\n", "g") || []).length >20)
-        content="";
-        else
-        content="<br /><br />"+content.replaceAll("\n","<br />");
-        document.getElementById("robot_holder").innerHTML = '<a href="'+urlAdd(url,"robots.txt")+'">Robots.txt Found</a>'+content;
-        flag_cout+=1;
-        chrome.browserAction.setBadgeText({text: flag_cout+""});
+        //alert(content);
+
       }
     }
     xhr.send();
-
-     var xhr2 = new XMLHttpRequest();
-        xhr2.open("GET", url, true);
-        xhr2.onreadystatechange = function() {
-          if (xhr2.readyState == 4) {
-
-
-            var regex = new RegExp("(href|src)=[\"|']((?!mailto|https).*?)[\"|']", "g");
-            var res = getAllMatches(regex,xhr2.responseText);
-            var resources="<br /> <h3>Resources</h3>";
-            res.forEach(function (item) {
-                resources+=item[0] +"<br />";
-            });
-
-
-              document.getElementById("headers_holder").innerHTML = xhr2.getAllResponseHeaders().replaceAll("\n","<br />")+resources;
-
-          }
-        }
-        xhr2.send();
-
-
-    var xhr3 = new XMLHttpRequest();
-    xhr3.open("GET", urlAdd(url,".git/logs/HEAD"), true);
-    xhr3.onreadystatechange = function() {
-      if (xhr3.readyState == 4) {
-       var content=xhr.responseText.toLowerCase();
-        var n1=content.search("not found");
-        var n2=content.search("404");
-       // innerText does not let the attacker inject HTML elements.
-        if(n1>0 || n2>0){
-        document.getElementById("git_holder").innerHTML = '<a href="'+urlAdd(url,".git/logs/HEAD")+'">Git HEAD Found</a> user https://github.com/internetwache/GitTools ';
-        flag_cout+=1;
-         chrome.browserAction.setBadgeText({text: flag_cout+""});
-        }
-       else
-        document.getElementById("git_holder").innerHTML = '<a href="'+urlAdd(url,".git/logs/HEAD")+'">Not found code thrown</a>  ';
-
-
-      }
-    }
-    xhr3.send();
-
-    var moreInfo="";
-    if(url.search("page=")>0 || url.search("p=")>0){
-    more+="try page=php://filter/convert.base64-encode/resource=index.php";
-    }
-    if(moreInfo!="")
-    document.getElementById("headers_holder").innerHTML = more;
 
 
 
@@ -196,28 +144,3 @@ String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
-
-// regex for all resources (href|src)=["|']((?!mailto|https).*?)["|']
-
-function getAllMatches(regex, text) {
-    if (regex.constructor !== RegExp) {
-        throw new Error('not RegExp');
-    }
-
-    var res = [];
-    var match = null;
-
-    if (regex.global) {
-        while (match = regex.exec(text)) {
-            res.push(match);
-        }
-    }
-    else {
-        if (match = regex.exec(text)) {
-            res.push(match);
-        }
-    }
-
-    return res;
-}
-
