@@ -6,6 +6,8 @@
  -->
 <html>
   <head>
+    <meta charset="utf-8">
+
     <title>CTF extension</title>
     <style type="text/css">
       body {
@@ -31,9 +33,15 @@
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
     -->
     <script src="popup.js"></script>
+    <!-- Scripts -->
+    <script src="js/jquery-2.0.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Cascading Style Sheets -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
 
-  <body>
+  <body class="container">
     <h1>CTF info</h1>
 
       <h3>Url</h3>
@@ -44,14 +52,23 @@
     <div id="git_holder">Git HEAD</div><br />
     <h3>Cookies</h3>
     <div id="cookie_holder">Cookies</div><br />
-      <h3>Headers</h3>
-      <div id="headers_holder">Headers</div><br />
+      <h3>Forms</h3>
 
+    <div id="forms_holder">Forms</div><br />
 
     <h3>More</h3>
     <div id="more_holder">More info will appear here</div><br />
+
+    <h3>Headers</h3>
+
+
+      <div id="headers_holder">Headers</div><br />
+
+
+
 
     <div id="container">
     </div>
   </body>
 </html>
+

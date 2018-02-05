@@ -120,13 +120,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (xhr.readyState == 4) {
         // innerText does not let the attacker inject HTML elements.
         var content=xhr.responseText;
-        if(content.match(new RegExp("\n", "g") || []).length >20)
-        content="";
-        else
-        content="<br /><br />"+content.replaceAll("\n","<br />");
-        document.getElementById("robot_holder").innerHTML = '<a href="'+urlAdd(url,"robots.txt")+'">Robots.txt Found</a>'+content;
-        flag_cout+=1;
-        chrome.browserAction.setBadgeText({text: flag_cout+""});
+
+         var content2=xhr.responseText.toLowerCase();
+                var n1=content2.search("not found");
+                var n2=content2.search("404");
+              if(n1>0 || n2>0){
+                     document.getElementById("robot_holder").innerHTML =   "Error thrown ";
+                     }else{
+                    if(content.match(new RegExp("\n", "g") || []).length >20)
+                         content="";
+                    else
+                          content="<br /><br />"+content.replaceAll("\n","<br />");
+                    document.getElementById("robot_holder").innerHTML = '<a href="'+urlAdd(url,"robots.txt")+'">Robots.txt Found</a>'+content;
+                    flag_cout+=1;
+                    chrome.browserAction.setBadgeText({text: flag_cout+""});
+
+        }
       }
     }
     xhr.send();
@@ -176,11 +185,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var moreInfo="";
     if(url.search("page=")>0 || url.search("p=")>0){
-    more+="try page=php://filter/convert.base64-encode/resource=index.php";
+    moreInfo+="try page=php://filter/convert.base64-encode/resource=index.php";
     }
     if(moreInfo!="")
-    document.getElementById("headers_holder").innerHTML = more;
+    document.getElementById("more_holder").innerHTML = moreInfo;
+
        getCookies(url);
+       getForms();
 
 
   });
@@ -189,16 +200,41 @@ document.addEventListener('DOMContentLoaded', () => {
 function getCookies(url){
 var domain=url2Domain(url);
 var cookiesStr='Domain:  <b><i>'+domain+'</b></i><br />';
-    cookiesStr+="<table><tr><td>Name</td><td>Value</td><td>Session</td><td>Path</td><td>Domain</td></tr>";
+    cookiesStr+="<table class='table-bordered'><tr><td>Name</td><td>Value</td><td>Session</td><td>Path</td><td>Domain</td></tr>";
             chrome.cookies.getAll({ 'domain':domain }, function(cookies) {
                 for (var i = 0; i < cookies.length; i++) {
-                    cookiesStr+="<tr><td><b>" + cookies[i].name + "</b></td><td>" + cookies[i].value + "</td><td> " +cookies[i].session.toString() +"</td><td>" + cookies[i].path + "</td><td>" + cookies[i].domain + "</td></tr>";
+                    var b64="";
+                    try{
+                    b64="<i>base64:</i><b>"+b64DecodeUnicode(cookies[i].value)+"</b> <br /> ";
+                    }catch(err) {}
+
+                    cookiesStr+="<tr><td><b>" + cookies[i].name + "</b></td><td>" +b64+ cookies[i].value + "</td><td> " +cookies[i].session.toString() +"</td><td>" + cookies[i].path + "</td><td>" + cookies[i].domain + "</td></tr>";
                  }
                 cookiesStr+="</table>";
-                  document.getElementById("cookie_holder").innerHTML = cookiesStr;
+                  document.getElementById("cookie_holder").innerHTML = cookiesStr+'<br> ';
     });
 
 }
+
+
+function b64DecodeUnicode(str) {
+    // Going backwards: from bytestream, to percent-encoding, to original string.
+    return decodeURIComponent(atob(str).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
+
+function b64EncodeUnicode(str) {
+    // first we use encodeURIComponent to get percent-encoded UTF-8,
+    // then we convert the percent encodings into raw bytes which
+    // can be fed into btoa.
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1);
+    }));
+}
+
+
 
 function url2Domain(url){
 var domain=urlAdd(url,'');
@@ -216,7 +252,17 @@ alert(domain);
 
 }
 
+function getForms(){
+   var fromsStr="Found "+document.forms.length+" forms";
+   for(var i = 0; i < document.forms.length; i++){
+   fromsStr+=document.forms[i]+"<br />";
+   }
 
+   document.getElementById("forms_holder").innerHTML = fromsStr;
+
+}
+
+//https://github.com/kripken/sql.js/
 
 function urlAdd(url,fileOrUrl){
     if(url.match(new RegExp("/", "g") || []).length >2)
@@ -253,4 +299,5 @@ function getAllMatches(regex, text) {
 
     return res;
 }
+
 
