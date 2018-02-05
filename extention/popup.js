@@ -147,14 +147,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             var regex = new RegExp("(href|src)=[\"|']((?!mailto|https).*?)[\"|']", "g");
+            var regex2 = new RegExp("<!--(.*)-->", "g");
             var res = getAllMatches(regex,xhr2.responseText);
+            var res2 = getAllMatches(regex2,xhr2.responseText);
             var resources="<br /> <h3>Resources</h3>";
             res.forEach(function (item) {
                 resources+=item[0] +"<br />";
             });
 
+            var comments="<br /> <h3>Comments</h3>"
+            res2.forEach(function (comment){
+            comments+=comment[0].replaceAll("<!--","").replaceAll("-->","") +"<br />";
+            });
 
-              document.getElementById("headers_holder").innerHTML = xhr2.getAllResponseHeaders().replaceAll("\n","<br />")+resources;
+              document.getElementById("headers_holder").innerHTML = xhr2.getAllResponseHeaders().replaceAll("\n","<br />")+resources+comments;
 
 
           }
