@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
               document.getElementById("headers_holder").innerHTML = xhr2.getAllResponseHeaders().replaceAll("\n","<br />")+resources;
 
+
           }
         }
         xhr2.send();
@@ -179,11 +180,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if(moreInfo!="")
     document.getElementById("headers_holder").innerHTML = more;
-
+       getCookies(url);
 
 
   });
+
 });
+function getCookies(url){
+var domain=url2Domain(url);
+var cookiesStr='Domain:  <b><i>'+domain+'</b></i><br />';
+    cookiesStr+="<table><tr><td>Name</td><td>Value</td><td>Session</td><td>Path</td><td>Domain</td></tr>";
+            chrome.cookies.getAll({ 'domain':domain }, function(cookies) {
+                for (var i = 0; i < cookies.length; i++) {
+                    cookiesStr+="<tr><td><b>" + cookies[i].name + "</b></td><td>" + cookies[i].value + "</td><td> " +cookies[i].session.toString() +"</td><td>" + cookies[i].path + "</td><td>" + cookies[i].domain + "</td></tr>";
+                 }
+                cookiesStr+="</table>";
+                  document.getElementById("cookie_holder").innerHTML = cookiesStr;
+    });
+
+}
+
+function url2Domain(url){
+var domain=urlAdd(url,'');
+domain=domain.replaceAll('http://','').replaceAll('https://','');
+domain=domain.substring(0,domain.indexOf("/"));
+/*var domainSplit=domain.split('.');
+
+if(domainSplit.length>2)
+    domain='*.'+domainSplit[domainSplit.length-2]+'.'+domainSplit[domainSplit.length-1];
+if(domainSplit.length==2)
+    domain='*.'+domainSplit[0]+'.'+domainSplit[1];
+alert(domain);
+*/
+  return domain;
+
+}
+
+
 
 function urlAdd(url,fileOrUrl){
     if(url.match(new RegExp("/", "g") || []).length >2)
