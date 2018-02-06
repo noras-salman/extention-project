@@ -1,7 +1,6 @@
 // Copyright (c) 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
 /**
  * Get the current URL.
  *
@@ -9,42 +8,42 @@
  *   is found.
  */
 function getCurrentTabUrl(callback) {
-  // Query filter to be passed to chrome.tabs.query - see
-  // https://developer.chrome.com/extensions/tabs#method-query
-  var queryInfo = {
-    active: true,
-    currentWindow: true
-  };
+    // Query filter to be passed to chrome.tabs.query - see
+    // https://developer.chrome.com/extensions/tabs#method-query
+    var queryInfo = {
+        active: true,
+        currentWindow: true
+    };
 
-  chrome.tabs.query(queryInfo, (tabs) => {
-    // chrome.tabs.query invokes the callback with a list of tabs that match the
-    // query. When the popup is opened, there is certainly a window and at least
-    // one tab, so we can safely assume that |tabs| is a non-empty array.
-    // A window can only have one active tab at a time, so the array consists of
-    // exactly one tab.
-    var tab = tabs[0];
+    chrome.tabs.query(queryInfo, (tabs) => {
+        // chrome.tabs.query invokes the callback with a list of tabs that match the
+        // query. When the popup is opened, there is certainly a window and at least
+        // one tab, so we can safely assume that |tabs| is a non-empty array.
+        // A window can only have one active tab at a time, so the array consists of
+        // exactly one tab.
+        var tab = tabs[0];
 
-    // A tab is a plain object that provides information about the tab.
-    // See https://developer.chrome.com/extensions/tabs#type-Tab
-    var url = tab.url;
+        // A tab is a plain object that provides information about the tab.
+        // See https://developer.chrome.com/extensions/tabs#type-Tab
+        var url = tab.url;
 
-    // tab.url is only available if the "activeTab" permission is declared.
-    // If you want to see the URL of other tabs (e.g. after removing active:true
-    // from |queryInfo|), then the "tabs" permission is required to see their
-    // "url" properties.
-    console.assert(typeof url == 'string', 'tab.url should be a string');
+        // tab.url is only available if the "activeTab" permission is declared.
+        // If you want to see the URL of other tabs (e.g. after removing active:true
+        // from |queryInfo|), then the "tabs" permission is required to see their
+        // "url" properties.
+        console.assert(typeof url == 'string', 'tab.url should be a string');
 
-    callback(url);
-  });
+        callback(url);
+    });
 
-  // Most methods of the Chrome extension APIs are asynchronous. This means that
-  // you CANNOT do something like this:
-  //
-  // var url;
-  // chrome.tabs.query(queryInfo, (tabs) => {
-  //   url = tabs[0].url;
-  // });
-  // alert(url); // Shows "undefined", because chrome.tabs.query is async.
+    // Most methods of the Chrome extension APIs are asynchronous. This means that
+    // you CANNOT do something like this:
+    //
+    // var url;
+    // chrome.tabs.query(queryInfo, (tabs) => {
+    //   url = tabs[0].url;
+    // });
+    // alert(url); // Shows "undefined", because chrome.tabs.query is async.
 }
 
 /**
@@ -53,15 +52,15 @@ function getCurrentTabUrl(callback) {
  * @param {string} color The new background color.
  */
 function changeBackgroundColor(color) {
-  var script = 'document.body.style.backgroundColor="' + color + '";';
-  // See https://developer.chrome.com/extensions/tabs#method-executeScript.
-  // chrome.tabs.executeScript allows us to programmatically inject JavaScript
-  // into a page. Since we omit the optional first argument "tabId", the script
-  // is inserted into the active tab of the current window, which serves as the
-  // default.
-  chrome.tabs.executeScript({
-    code: script
-  });
+    var script = 'document.body.style.backgroundColor="' + color + '";';
+    // See https://developer.chrome.com/extensions/tabs#method-executeScript.
+    // chrome.tabs.executeScript allows us to programmatically inject JavaScript
+    // into a page. Since we omit the optional first argument "tabId", the script
+    // is inserted into the active tab of the current window, which serves as the
+    // default.
+    chrome.tabs.executeScript({
+        code: script
+    });
 }
 
 /**
@@ -72,12 +71,12 @@ function changeBackgroundColor(color) {
  *     the given url on success, or a falsy value if no color is retrieved.
  */
 function getSavedBackgroundColor(url, callback) {
-  // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-  // for chrome.runtime.lastError to ensure correctness even when the API call
-  // fails.
-  chrome.storage.sync.get(url, (items) => {
-    callback(chrome.runtime.lastError ? null : items[url]);
-  });
+    // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
+    // for chrome.runtime.lastError to ensure correctness even when the API call
+    // fails.
+    chrome.storage.sync.get(url, (items) => {
+        callback(chrome.runtime.lastError ? null : items[url]);
+    });
 }
 
 /**
@@ -87,12 +86,12 @@ function getSavedBackgroundColor(url, callback) {
  * @param {string} color The background color to be saved.
  */
 function saveBackgroundColor(url, color) {
-  var items = {};
-  items[url] = color;
-  // See https://developer.chrome.com/apps/storage#type-StorageArea. We omit the
-  // optional callback since we don't need to perform any action once the
-  // background color is saved.
-  chrome.storage.sync.set(items);
+    var items = {};
+    items[url] = color;
+    // See https://developer.chrome.com/apps/storage#type-StorageArea. We omit the
+    // optional callback since we don't need to perform any action once the
+    // background color is saved.
+    chrome.storage.sync.set(items);
 }
 
 // This extension loads the saved background color for the current tab if one
@@ -104,120 +103,137 @@ function saveBackgroundColor(url, color) {
 // chrome.storage.local allows the extension data to be synced across multiple
 // user devices.
 document.addEventListener('DOMContentLoaded', () => {
-  getCurrentTabUrl((url) => {
+    getCurrentTabUrl((url) => {
 
-    var dropdown = document.getElementById('dropdown');
+        var dropdown = document.getElementById('dropdown');
 
-       document.getElementById("url_holder").innerHTML ="Looking at:<b>"+urlAdd(url,"")+"</b>";
+        document.getElementById("url_holder").innerHTML = "Looking at:<b>" + urlAdd(url, "") + "</b>";
 
 
-        //document.getElementById("cookie_holder").innerHTML ="@getCookies. Cookies found " +  cookies.length;
+        var flag_cout = 0;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", urlAdd(url, "robots.txt"), true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                // innerText does not let the attacker inject HTML elements.
+                var content = xhr.responseText;
 
-    var flag_cout=0;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", urlAdd(url,"robots.txt"), true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4) {
-        // innerText does not let the attacker inject HTML elements.
-        var content=xhr.responseText;
-
-         var content2=xhr.responseText.toLowerCase();
-                var n1=content2.search("not found");
-                var n2=content2.search("404");
-              if(n1>0 || n2>0){
-                     document.getElementById("robot_holder").innerHTML =   "Error thrown ";
-                     }else{
-                    if(content.match(new RegExp("\n", "g") || []).length >20)
-                         content="";
+                var content2 = xhr.responseText.toLowerCase();
+                var n1 = content2.search("not found");
+                var n2 = content2.search("404");
+                if (n1 > 0 || n2 > 0) {
+                    document.getElementById("robot_holder").innerHTML = "Error thrown ";
+                } else {
+                    if (content.match(new RegExp("\n", "g") || []).length > 20)
+                        content = "";
                     else
-                          content="<br /><br />"+content.replaceAll("\n","<br />");
-                    document.getElementById("robot_holder").innerHTML = '<a href="'+urlAdd(url,"robots.txt")+'">Robots.txt Found</a>'+content;
-                    flag_cout+=1;
-                    chrome.browserAction.setBadgeText({text: flag_cout+""});
+                        content = "<br /><br />" + content.replaceAll("\n", "<br />");
+                    document.getElementById("robot_holder").innerHTML = '<a href="' + urlAdd(url, "robots.txt") + '">Robots.txt Found</a>' + content;
+                    flag_cout += 1;
+                    chrome.browserAction.setBadgeText({
+                        text: flag_cout + ""
+                    });
 
+                }
+            }
         }
-      }
-    }
-    xhr.send();
+        xhr.send();
 
-     var xhr2 = new XMLHttpRequest();
+        var xhr2 = new XMLHttpRequest();
         xhr2.open("GET", url, true);
         xhr2.onreadystatechange = function() {
-          if (xhr2.readyState == 4) {
+            if (xhr2.readyState == 4) {
 
 
-            var regex = new RegExp("(href|src)=[\"|']((?!mailto|https).*?)[\"|']", "g");
-            var regex2 = new RegExp("<!--(.*)-->", "g");
-            var res = getAllMatches(regex,xhr2.responseText);
-            var res2 = getAllMatches(regex2,xhr2.responseText);
-            var resources="<br /> <h3>Resources</h3>";
-            res.forEach(function (item) {
-                resources+=item[0] +"<br />";
-            });
+                var regex = new RegExp("(href|src)=[\"|']((?!mailto|https).*?)[\"|']", "g");
+                var regex2 = new RegExp("<!--(.*)-->", "g");
+                var res = getAllMatches(regex, xhr2.responseText);
+                var res2 = getAllMatches(regex2, xhr2.responseText);
+                var resources = "";
+                res.forEach(function(item) {
+                    resources += item[0] + "<br />";
+                });
 
-            var comments="<br /> <h3>Comments</h3>"
-            res2.forEach(function (comment){
-            comments+=comment[0].replaceAll("<!--","").replaceAll("-->","") +"<br />";
-            });
+                var comments = ""
+                res2.forEach(function(comment) {
+                    comments += encodeHTML(comment[0].replaceAll("<!--", "").replaceAll("-->", "")) + "<br />";
+                });
 
-              document.getElementById("headers_holder").innerHTML = xhr2.getAllResponseHeaders().replaceAll("\n","<br />")+resources+comments;
+                document.getElementById("headers_holder").innerHTML = xhr2.getAllResponseHeaders().replaceAll("\n", "<br />");
+                document.getElementById("resources_holder").innerHTML = resources;
+                document.getElementById("comments_holder").innerHTML = comments;
 
 
-          }
+            }
         }
         xhr2.send();
 
 
-    var xhr3 = new XMLHttpRequest();
-    xhr3.open("GET", urlAdd(url,".git/logs/HEAD"), true);
-    xhr3.onreadystatechange = function() {
-      if (xhr3.readyState == 4) {
-       var content=xhr.responseText.toLowerCase();
-        var n1=content.search("not found");
-        var n2=content.search("404");
-       // innerText does not let the attacker inject HTML elements.
-        if(n1>0 || n2>0){
-        document.getElementById("git_holder").innerHTML = '<a href="'+urlAdd(url,".git/logs/HEAD")+'">Git HEAD Found</a> user https://github.com/internetwache/GitTools ';
-        flag_cout+=1;
-         chrome.browserAction.setBadgeText({text: flag_cout+""});
+
+        var xhr3 = new XMLHttpRequest();
+        xhr3.open("GET", urlAdd(url, ".git/logs/HEAD"), true);
+        xhr3.onreadystatechange = function() {
+            if (xhr3.readyState == 4) {
+                var content = xhr.responseText.toLowerCase();
+                var n1 = content.search("not found");
+                var n2 = content.search("404");
+                // innerText does not let the attacker inject HTML elements.
+                if (n1 > 0 || n2 > 0) {
+                    document.getElementById("git_holder").innerHTML = '<a href="' + urlAdd(url, ".git/logs/HEAD") + '">Git HEAD Found</a> user https://github.com/internetwache/GitTools ';
+                    flag_cout += 1;
+                    chrome.browserAction.setBadgeText({
+                        text: flag_cout + ""
+                    });
+                } else
+                    document.getElementById("git_holder").innerHTML = 'Not found code thrown  ';
+
+
+            }
         }
-       else
-        document.getElementById("git_holder").innerHTML = '<a href="'+urlAdd(url,".git/logs/HEAD")+'">Not found code thrown</a>  ';
+        xhr3.send();
+
+        var moreInfo = "";
+        if (url.search("page=") > 0 || url.search("p=") > 0) {
+            moreInfo += "try page=php://filter/convert.base64-encode/resource=index.php";
+        }
+
+        if (moreInfo != "")
+            document.getElementById("more_holder").innerHTML = moreInfo;
+
+        getCookies(url);
+        getForms();
 
 
-      }
-    }
-    xhr3.send();
-
-    var moreInfo="";
-    if(url.search("page=")>0 || url.search("p=")>0){
-    moreInfo+="try page=php://filter/convert.base64-encode/resource=index.php";
-    }
-    if(moreInfo!="")
-    document.getElementById("more_holder").innerHTML = moreInfo;
-
-       getCookies(url);
-       getForms();
+    });
 
 
-  });
+
+    document.getElementById("encoder_button").onclick = function() {
+
+        handleEncoderClick();
+
+
+    };
 
 });
-function getCookies(url){
-var domain=url2Domain(url);
-var cookiesStr='Domain:  <b><i>'+domain+'</b></i><br />';
-    cookiesStr+="<table class='table-bordered'><tr><td>Name</td><td>Value</td><td>Session</td><td>Path</td><td>Domain</td></tr>";
-            chrome.cookies.getAll({ 'domain':domain }, function(cookies) {
-                for (var i = 0; i < cookies.length; i++) {
-                    var b64="";
-                    try{
-                    b64="<i>base64:</i><b>"+b64DecodeUnicode(cookies[i].value)+"</b> <br /> ";
-                    }catch(err) {}
 
-                    cookiesStr+="<tr><td><b>" + cookies[i].name + "</b></td><td>" +b64+ cookies[i].value + "</td><td> " +cookies[i].session.toString() +"</td><td>" + cookies[i].path + "</td><td>" + cookies[i].domain + "</td></tr>";
-                 }
-                cookiesStr+="</table>";
-                  document.getElementById("cookie_holder").innerHTML = cookiesStr+'<br> ';
+function getCookies(url) {
+    var domain = url2Domain(url);
+    var cookiesStr = 'Domain:  <b><i>' + domain + '</b></i><br />';
+    //cookiesStr+="<table class='class'><tr><td>Name</td><td>Value</td><td>Session</td><td>Path</td><td>Domain</td></tr>";
+    chrome.cookies.getAll({
+        'domain': domain
+    }, function(cookies) {
+        for (var i = 0; i < cookies.length; i++) {
+            var b64 = "";
+            try {
+                b64 = "<i>base64:</i><b>" + b64DecodeUnicode(cookies[i].value) + "</b> <br /> ";
+            } catch (err) {}
+            cookiesStr += '<hr><div  syle="word-wrap:break-word; display:inline-block;"><b>' + cookies[i].name + "</b><br />";
+            cookiesStr += cookies[i].value + "<br />" + b64 + "session: " + cookies[i].session.toString() + "<br />path: " + cookies[i].path + "<br /> domain:" + cookies[i].domain + "</div>";
+        }
+        cookiesStr += "</table>";
+        document.getElementById("cookie_holder").innerHTML = cookiesStr + '<br> ';
     });
 
 }
@@ -237,50 +253,57 @@ function b64EncodeUnicode(str) {
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
         function toSolidBytes(match, p1) {
             return String.fromCharCode('0x' + p1);
-    }));
+        }));
 }
 
 
 
-function url2Domain(url){
-var domain=urlAdd(url,'');
-domain=domain.replaceAll('http://','').replaceAll('https://','');
-domain=domain.substring(0,domain.indexOf("/"));
-/*var domainSplit=domain.split('.');
+function url2Domain(url) {
+    var domain = urlAdd(url, '');
+    domain = domain.replaceAll('http://', '').replaceAll('https://', '');
+    domain = domain.substring(0, domain.indexOf("/"));
+    /*var domainSplit=domain.split('.');
 
-if(domainSplit.length>2)
-    domain='*.'+domainSplit[domainSplit.length-2]+'.'+domainSplit[domainSplit.length-1];
-if(domainSplit.length==2)
-    domain='*.'+domainSplit[0]+'.'+domainSplit[1];
-alert(domain);
-*/
-  return domain;
+    if(domainSplit.length>2)
+        domain='*.'+domainSplit[domainSplit.length-2]+'.'+domainSplit[domainSplit.length-1];
+    if(domainSplit.length==2)
+        domain='*.'+domainSplit[0]+'.'+domainSplit[1];
+    alert(domain);
+    */
+    return domain;
 
 }
 
-function getForms(){
-   var fromsStr="Found "+document.forms.length+" forms";
-   for(var i = 0; i < document.forms.length; i++){
-   fromsStr+=document.forms[i]+"<br />";
-   }
+function getForms() {
+    var fromsStr = "Found " + document.forms.length + " forms";
+    for (var i = 0; i < document.forms.length; i++) {
+        fromsStr += document.forms[i] + "<br />";
+    }
 
-   document.getElementById("forms_holder").innerHTML = fromsStr;
+    document.getElementById("forms_holder").innerHTML = fromsStr;
 
 }
 
 //https://github.com/kripken/sql.js/
 
-function urlAdd(url,fileOrUrl){
-    if(url.match(new RegExp("/", "g") || []).length >2)
-    return url.substring(0, url.lastIndexOf("/")+1)+fileOrUrl;
+function urlAdd(url, fileOrUrl) {
+    if (url.match(new RegExp("/", "g") || []).length > 2)
+        return url.substring(0, url.lastIndexOf("/") + 1) + fileOrUrl;
     else
-    return url+"/"+fileOrUrl;
+        return url + "/" + fileOrUrl;
 }
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
+
+function encodeHTML(rawStr) {
+    var encodedStr = rawStr.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+        return '&#' + i.charCodeAt(0) + ';';
+    });
+    return encodedStr;
+}
 
 // regex for all resources (href|src)=["|']((?!mailto|https).*?)["|']
 
@@ -296,8 +319,7 @@ function getAllMatches(regex, text) {
         while (match = regex.exec(text)) {
             res.push(match);
         }
-    }
-    else {
+    } else {
         if (match = regex.exec(text)) {
             res.push(match);
         }
@@ -307,3 +329,218 @@ function getAllMatches(regex, text) {
 }
 
 
+
+function handleEncoderClick() {
+
+    var op_encode = document.getElementById("op_encode");
+    var encoder_input = document.getElementById("encoder_input");
+    var result = "Something went wrong!";
+    if (op_encode.checked) {
+        // ENCODE
+
+        result = encode(encoder_input.value);
+    } else {
+        //DECODE
+        result = decode(encoder_input.value);
+    }
+
+    document.getElementById("encoder_result").innerHTML = '<hr>' + result;
+    document.getElementById("content_length").innerHTML = 'length: ' + encoder_input.value.length;
+
+}
+
+
+function getEncodeType() {
+    if (document.getElementById("b64").checked)
+        return "b64";
+
+    if (document.getElementById("hex").checked)
+        return "hex";
+
+    if (document.getElementById("binary8").checked)
+        return "binary8";
+
+    if (document.getElementById("binary7").checked)
+        return "binary7";
+
+    if (document.getElementById("b85").checked)
+        return "b85";
+    if (document.getElementById("bacon").checked)
+        return "bacon";
+
+    if (document.getElementById("caesar").checked)
+        return "caesar";
+
+}
+
+function encode(raw) {
+    if (getEncodeType() == "b64") {
+        return b64EncodeUnicode(raw);
+    } else if (getEncodeType() == "b85") {
+        return encode_ascii85(raw);
+    } else if (getEncodeType() == "hex") {
+        return a2hex(raw);
+
+    } else if (getEncodeType() == "binary8") {
+        return text2Binary(raw);
+    } else if (getEncodeType() == "binary7") {
+
+    } else if (getEncodeType() == "md5") {
+        return $.md5('value');
+    } else if (getEncodeType() == "bacon") {
+        return bacon_encrypt(raw);
+    } else if (getEncodeType() == "caesar") {
+        return brute_caesar(raw);
+    } else {
+        return "getEncodeType failed";
+    }
+}
+
+function decode(raw) {
+    if (getEncodeType() == "b64") {
+        return b64DecodeUnicode(raw);
+    } else if (getEncodeType() == "b85") {
+        return decode_ascii85(raw);
+    } else if (getEncodeType() == "hex") {
+        return hex2a(raw);
+    } else if (getEncodeType() == "binary8") {
+        return binarytoString(raw);
+    } else if (getEncodeType() == "binary7") {
+
+    } else if (getEncodeType() == "md5") {
+
+    } else if (getEncodeType() == "bacon") {
+        return bacon_decrypt(raw);
+    } else if (getEncodeType() == "caesar") {
+        return brute_caesar(raw);
+    } else {
+        return "getEncodeType failed";
+    }
+}
+
+
+function a2hex(str) {
+    var arr = [];
+    for (var i = 0, l = str.length; i < l; i++) {
+        var hex = Number(str.charCodeAt(i)).toString(16);
+        arr.push(hex);
+    }
+    return arr.join('');
+}
+
+
+function hex2a(hexx) {
+    var hex = hexx.toString(); //force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+}
+
+function text2Binary(string) {
+    return string.split('').map(function(char) {
+        return char.charCodeAt(0).toString(2);
+    }).join(' ');
+}
+
+
+
+function binarytoString(str) {
+    return str.split(/\s/).map(function(val) {
+        return String.fromCharCode(parseInt(val, 2));
+    }).join("");
+}
+
+function encode_ascii85(a) {
+    var b, c, d, e, f, g, h, i, j, k;
+    for (!/[^\x00-\xFF]/.test(a), b = "\x00\x00\x00\x00".slice(a.length % 4 || 4), a += b,
+        c = [], d = 0, e = a.length; e > d; d += 4) f = (a.charCodeAt(d) << 24) + (a.charCodeAt(d + 1) << 16) + (a.charCodeAt(d + 2) << 8) + a.charCodeAt(d + 3),
+        0 !== f ? (k = f % 85, f = (f - k) / 85, j = f % 85, f = (f - j) / 85, i = f % 85,
+            f = (f - i) / 85, h = f % 85, f = (f - h) / 85, g = f % 85, c.push(g + 33, h + 33, i + 33, j + 33, k + 33)) : c.push(122);
+    return function(a, b) {
+        for (var c = b; c > 0; c--) a.pop();
+    }(c, b.length), "<~" + String.fromCharCode.apply(String, c) + "~>";
+}
+
+function decode_ascii85(a) {
+    var c, d, e, f, g, h = String,
+        l = "length",
+        w = 255,
+        x = "charCodeAt",
+        y = "slice",
+        z = "replace";
+    for ("<~" === a[y](0, 2) && "~>" === a[y](-2), a = a[y](2, -2)[z](/\s/g, "")[z]("z", "!!!!!"),
+        c = "uuuuu" [y](a[l] % 5 || 5), a += c, e = [], f = 0, g = a[l]; g > f; f += 5) d = 52200625 * (a[x](f) - 33) + 614125 * (a[x](f + 1) - 33) + 7225 * (a[x](f + 2) - 33) + 85 * (a[x](f + 3) - 33) + (a[x](f + 4) - 33),
+        e.push(w & d >> 24, w & d >> 16, w & d >> 8, w & d);
+    return function(a, b) {
+        for (var c = b; c > 0; c--) a.pop();
+    }(e, c[l]), h.fromCharCode.apply(h, e);
+}
+
+
+// BACON
+
+function bacon_encrypt(A) {
+    if (A = A.replace(" ", ""), !A.match(/^[a-zA-Z]+$/)) return "Bacon only encrypts [a-z] and [A-Z]";
+    A = A.toLowerCase();
+    var B = "";
+    for (i = 0; i < A.length; i++) B += enc_table(A[i]);
+    return B
+}
+
+function bacon_decrypt(A) {
+    if (A = A.replace(" ", ""), A = A.toUpperCase(), !A.match(/^[AB]+$/)) return "Bacon only has A and B in the chiper-text";
+    if (A.length % 5 != 0) return "There are missing parts of the cipher text";
+    var B = "",
+        e = "";
+    for (i = 0; i < A.length; i++) e += A[i], 5 == e.length && (B += dec_table(e), e = "");
+    return B
+}
+
+function enc_table(A) {
+    return "a" == A ? "AAAAA" : "b" == A ? "AAAAB" : "c" == A ? "AAABA" : "d" == A ? "AAABB" : "e" == A ? "AABAA" : "f" == A ? "AABAB" : "g" == A ? "AABBA" : "h" == A ? "AABBB" : "i" == A ? "ABAAA" : "j" == A ? "ABAAA" : "k" == A ? "ABAAB" : "l" == A ? "ABABA" : "m" == A ? "ABABB" : "n" == A ? "ABBAA" : "o" == A ? "ABBAB" : "p" == A ? "ABBBA" : "q" == A ? "ABBBB" : "r" == A ? "BAAAA" : "s" == A ? "BAAAB" : "t" == A ? "BAABA" : "u" == A ? "BAABB" : "v" == A ? "BAABB" : "w" == A ? "BABAA" : "x" == A ? "BABAB" : "y" == A ? "BABBA" : "z" == A ? "BABBB" : null
+}
+
+function dec_table(A) {
+    return "AAAAA" == A ? "a" : "AAAAB" == A ? "b" : "AAABA" == A ? "c" : "AAABB" == A ? "d" : "AABAA" == A ? "e" : "AABAB" == A ? "f" : "AABBA" == A ? "g" : "AABBB" == A ? "h" : "ABAAA" == A ? "i" : "ABAAA" == A ? "j" : "ABAAB" == A ? "k" : "ABABA" == A ? "l" : "ABABB" == A ? "m" : "ABBAA" == A ? "n" : "ABBAB" == A ? "o" : "ABBBA" == A ? "p" : "ABBBB" == A ? "q" : "BAAAA" == A ? "r" : "BAAAB" == A ? "s" : "BAABA" == A ? "t" : "BAABB" == A ? "u" : "BAABB" == A ? "v" : "BABAA" == A ? "w" : "BABAB" == A ? "x" : "BABBA" == A ? "y" : "BABBB" == A ? "z" : null
+}
+
+//caesar shift
+function rot(str, amount) {
+    // Wrap the amount
+    if (amount < 0)
+        return rot(str, amount + 26);
+
+    // Make an output variable
+    var output = '';
+    // Go through each character
+    for (var i = 0; i < str.length; i++) {
+        // Get the character we'll be appending
+        var c = str[i];
+        // If it's a letter...
+        if (c.match(/[a-z]/i)) {
+            // Get its code
+            var code = str.charCodeAt(i);
+            // Uppercase letters
+            if ((code >= 65) && (code <= 90))
+                c = String.fromCharCode(((code - 65 + amount) % 26) + 65);
+            // Lowercase letters
+            else if ((code >= 97) && (code <= 122))
+                c = String.fromCharCode(((code - 97 + amount) % 26) + 97);
+        }
+        // Append
+        output += c;
+    }
+    // All done!
+    return output;
+}
+
+function brute_caesar(str) {
+    var output = '';
+    for (var i = -26; i < 26; i++) {
+        if (i == 0)
+            continue;
+        output += rot(str, i) + '<br />';
+    }
+    return output;
+}

@@ -5,26 +5,11 @@
  value "popup.html".
  -->
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
 
     <title>CTF extension</title>
-    <style type="text/css">
-      body {
-        margin: 10px;
-        white-space: nowrap;
-      }
 
-      h1 {
-        font-size: 15px;
-      }
-
-      #container {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-      }
-    </style>
 
     <!--
       - JavaScript and HTML must be in separate files: see our Content Security
@@ -32,43 +17,202 @@
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
     -->
-    <script src="popup.js"></script>
+
     <!-- Scripts -->
     <script src="js/jquery-2.0.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
+
+    <script src="popup.js"></script>
+
+
     <!-- Cascading Style Sheets -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-  </head>
 
-  <body class="container">
-    <h1>CTF info</h1>
+    <style type="text/css">
 
-      <h3>Url</h3>
-      <div id="url_holder">URL</div><br />
-      <h3>Robots</h3>
-      <div id="robot_holder">Robots.txt Not Found</div><br />
-    <h3>Git HEAD</h3>
-    <div id="git_holder">Git HEAD</div><br />
-    <h3>Cookies</h3>
-    <div id="cookie_holder">Cookies</div><br />
-      <h3>Forms</h3>
+    .nav{
+    margin-top:10px;
 
-    <div id="forms_holder">Forms</div><br />
-
-    <h3>More</h3>
-    <div id="more_holder">More info will appear here</div><br />
-
-    <h3>Headers</h3>
+    }
+      .tab-content {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding:10px;
+  margin-bottom:10px;
+    border-radius: 10px;
+    border: 2px solid #73AD21;
+      }
 
 
-      <div id="headers_holder">Headers</div><br />
+    h1,h2,h3,h4,h5 {
+    color: #f4b342;
+    }
+
+    a {
+    color: #ff0000;
+    }
+
+    textarea{
+     resize: none;
+     }
+
+     b{
+       color: #73AD21;
+     }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home">Web Info</a></li>
+        <li><a data-toggle="tab" href="#menu1">Encoder</a></li>
+        <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
 
 
+            <h3>Url</h3>
+            <div id="url_holder">URL</div>
 
 
-    <div id="container">
+            <table class="table">
+                <tr>
+                    <td>
+                        <h3>Robots</h3>
+                        <div id="robot_holder">Robots.txt Not Found</div>
+                    </td>
+
+                    <td>
+                        <h3>Git HEAD</h3>
+                        <div id="git_holder">Git HEAD</div>
+                    </td>
+                </tr>
+            </table>
+
+            <hr>
+
+            <h3>Cookies</h3>
+            <div id="cookie_holder">Cookies</div>
+
+            <hr>
+
+            <h3>Forms</h3>
+            <div id="forms_holder">Forms</div>
+            <hr>
+
+            <h3>More</h3>
+            <div id="more_holder">More info will appear here</div>
+            <hr>
+
+
+            <h3>Headers</h3>
+            <div id="headers_holder">Headers</div>
+            <hr>
+
+            <h3>Comments</h3>
+            <div id="comments_holder">Comments</div>
+            <hr>
+
+            <h3>Resources</h3>
+            <div id="resources_holder">Resources</div>
+            <hr>
+
+        </div>
+
+
+        <div id="menu1" class="tab-pane fade">
+            <h3>Encoder</h3>
+            <p>Some content in menu 1.</p>
+
+            <div>
+                <input type="radio" id="op_encode"
+                       name="op" value="op_encode" checked>
+                <label for="op_encode">Encode</label>
+
+                <input type="radio" id="op_decode"
+                       name="op" value="op_decode">
+                <label for="op_decode">Decode</label>
+
+            </div>
+            <p>TO/FROM  &lt;-- &gt; ASCII/UTF-8</p>
+
+            <div>
+
+                <input type="radio" id="hex"
+                       name="typ_from" value="hex">
+                <label for="hex">Hex</label>
+
+                <input type="radio" id="binary8"
+                       name="typ_from" value="binary8">
+                <label for="binary8">Binary 8</label>
+
+                <input type="radio" id="binary7"
+                       name="typ_from" value="binary7">
+                <label for="binary7">Binary 7</label>
+
+                <br/>
+                <input type="radio" id="b64"
+                       name="typ_from" value="b64">
+                <label for="b64">Base64</label>
+
+                <input type="radio" id="b85"
+                       name="typ_from" value="b85">
+                <label for="b85">Base85</label>
+
+                <br/>
+
+                <input type="radio" id="bacon"
+                       name="typ_from" value="bacon">
+                <label for="bacon">BACON</label>
+
+                <input type="radio" id="caesar"
+                       name="typ_from" value="caesar">
+                <label for="caesar">Caesar brutefource</label>
+
+                <p>TODO<br /> Ascii85 (also called Base85) Base58  Base16  Geohash <br/> https://en.wikipedia.org/wiki/Binary-to-text_encoding <br/> https://www.dcode.fr/tools-list</p>
+
+                <input type="radio" id="md5"
+                       name="typ_from" value="md5">
+                <label for="md5">md5</label>
+
+                <input type="radio" id="sha1"
+                       name="typ_from" value="sha1">
+                <label for="sha1">sha1</label>
+
+                <input type="radio" id="sha256"
+                       name="typ_from" value="sha256">
+                <label for="sha1">sha256</label>
+
+                <input type="radio" id="sha512"
+                       name="typ_from" value="sha512">
+                <label for="sha1">sha512</label>
+            </div>
+            <div class="form-group">
+            <textarea id="encoder_input"  class="form-control"></textarea>
+            <div id="content_length"></div>
+            </div>
+
+            <button id="encoder_button" class="btn btn-warning">Do OP</button>
+
+            <div id="encoder_result"></div>
+
+        </div>
+        <div id="menu2" class="tab-pane fade">
+            <h3>Menu 2</h3>
+            <p>Some content in menu 2.</p>
+
+            <!--https://gist.github.com/jo/8619441-->
+        </div>
     </div>
-  </body>
+
+
+</div>
+
+</body>
 </html>
 
