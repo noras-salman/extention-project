@@ -349,6 +349,10 @@ function handleEncoderClick() {
 
 }
 
+function putResults(result){
+    document.getElementById("encoder_result").innerHTML =  '<hr>' + result;
+}
+
 
 function getEncodeType() {
     if (document.getElementById("b64").checked)
@@ -371,6 +375,8 @@ function getEncodeType() {
     if (document.getElementById("caesar").checked)
         return "caesar";
 
+     if (document.getElementById("factor").checked)
+        return "factor";
 }
 
 function encode(raw) {
@@ -390,8 +396,10 @@ function encode(raw) {
     } else if (getEncodeType() == "bacon") {
         return bacon_encrypt(raw);
     } else if (getEncodeType() == "caesar") {
-        return brute_caesar(raw);
-    } else {
+              return brute_caesar(raw);
+    }else if (getEncodeType() == "factor") {
+                   return factorDB(raw);
+      } else {
         return "getEncodeType failed";
     }
 }
@@ -543,4 +551,48 @@ function brute_caesar(str) {
         output += rot(str, i) + '<br />';
     }
     return output;
+}
+
+function factorDB(raw_decimal){
+raw_decimal=raw_decimal.replaceAll("\n","");
+
+ var xhrfactor = new XMLHttpRequest();
+        xhrfactor.open("GET", "http://www.factordb.com/index.php?query="+raw_decimal, true);
+        xhrfactor.onreadystatechange = function() {
+            if (xhrfactor.readyState == 4) {
+                var content = xhrfactor.responseText;
+
+                var C = content.search("<td>C</td>");
+                var CF = content.search("<td>CF</td>");
+                var FF = content.search("<td>FF</td>");
+                var P = content.search("<td>P</td>");
+                var Prp = content.search("<td>Prp</td>");
+                var N = content.search("<td>N</td>");
+                var U = content.search("<td>U</td>");
+                var UNIT = content.search("<td>Unit</td>");
+                var star = content.search("<td>*</td>");
+
+              if(C>0)
+                putResults("Composite, no factors known");
+              if(CF>0)
+                putResults("Composite, factors known");
+              if(FF>0)
+                putResults("Composite, fully factored");
+              if(P>0)
+                putResults("Definitely prime");
+              if(Prp>0)
+                putResults("Probably prime");
+             if(UNIT>0)
+                 putResults("Just for 1");
+                if(U>0)
+                  putResults("Unknown");
+              if(N>0)
+                    putResults("This number is not in database (and was not added due to your settings)");
+              if(star>0)
+                putResults("Added to database during this request");
+
+            }
+        }
+        xhrfactor.send();
+return "called";
 }
