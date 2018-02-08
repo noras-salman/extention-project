@@ -229,8 +229,36 @@ function getCookies(url) {
             try {
                 b64 = "<i>base64:</i><b>" + b64DecodeUnicode(cookies[i].value) + "</b> <br /> ";
             } catch (err) {}
+            var jwts="";
+            var regex2 = new RegExp("[A-Za-z0-9-_=]+[.][A-Za-z0-9-_=]+[.][A-Za-z0-9-_.+/=]*", "g");
+            var res = getAllMatches(regex2, cookies[i].value);
+            res.forEach(function(item) {
+                               jwts += "<i>JWT:</i><b>" +  item[0] + "</b><br />";
+                               //header
+                                var firstDotIndex=item[0].indexOf(".");
+                                var scondDotIndex=item[0].substring(firstDotIndex+1,item[0].length-1).indexOf(".")+item[0].indexOf(".");
+                                var header=item[0].substring(0,firstDotIndex);
+                                var payload=item[0].substring(firstDotIndex+1,scondDotIndex+1);
+                                var signature=item[0].substring(scondDotIndex+2,item[0].length);
+
+                                 jwts += "<b>header</b><br /><i>" +  header + "</i><br />";
+                                 try {
+                               jwts += "<b>header decoded</b><br /><i>" +  b64DecodeUnicode(header) + "</i><br />";
+                               } catch (err) {
+                                jwts += "<b>header decoded</b><br /><i>FAILED TO BASE64DECODE</i><br />";
+                               }
+                                 jwts += "<b>payload</b><br /><i>" +  payload + "</i><br />";
+                                   try {
+                                 jwts += "<b>payload decoded</b><br /><i>" +  b64DecodeUnicode(payload) + "</i><br />";
+                                 } catch (err) {
+                                jwts += "<b>payload decoded</b><br /><i>FAILED TO BASE64DECODE</i><br />";
+                               }
+                                 jwts += "<b>signature</b><br /><i>" +  signature + "</i><br />";
+
+             });
+
             cookiesStr += '<hr><div  syle="word-wrap:break-word; display:inline-block;"><b>' + cookies[i].name + "</b><br />";
-            cookiesStr += cookies[i].value + "<br />" + b64 + "session: " + cookies[i].session.toString() + "<br />path: " + cookies[i].path + "<br /> domain:" + cookies[i].domain + "</div>";
+            cookiesStr += cookies[i].value + "<br />" + b64 + jwts+"session: " + cookies[i].session.toString() + "<br />path: " + cookies[i].path + "<br /> domain:" + cookies[i].domain + "</div>";
         }
         cookiesStr += "</table>";
         document.getElementById("cookie_holder").innerHTML = cookiesStr + '<br> ';
