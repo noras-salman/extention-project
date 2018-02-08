@@ -159,7 +159,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     comments += encodeHTML(comment[0].replaceAll("<!--", "").replaceAll("-->", "")) + "<br />";
                 });
 
-                document.getElementById("headers_holder").innerHTML = xhr2.getAllResponseHeaders().replaceAll("\n", "<br />");
+                var headersTable='<table class="table">';
+                var str_array = xhr2.getAllResponseHeaders().split('\n');
+
+                for(var i = 0; i < str_array.length; i++) {
+                   // Trim the excess whitespace.
+                  var key = str_array[i].substring(0,str_array[i].indexOf(':'));
+                  var value = str_array[i].substring(str_array[i].indexOf(':')+1,str_array[i].length);
+                   headersTable+="<tr><td>"+key+"</td><td>"+value+"</td></tr>";
+
+                }
+                 headersTable+="</table>";
+                document.getElementById("headers_holder").innerHTML = headersTable;
                 document.getElementById("resources_holder").innerHTML = resources;
                 document.getElementById("comments_holder").innerHTML = comments;
 
@@ -240,20 +251,25 @@ function getCookies(url) {
                                 var header=item[0].substring(0,firstDotIndex);
                                 var payload=item[0].substring(firstDotIndex+1,scondDotIndex+1);
                                 var signature=item[0].substring(scondDotIndex+2,item[0].length);
-
+                                   var failed=0;
                                  jwts += "<b>header</b><br /><i>" +  header + "</i><br />";
                                  try {
                                jwts += "<b>header decoded</b><br /><i>" +  b64DecodeUnicode(header) + "</i><br />";
                                } catch (err) {
+                               failed+=1;
                                 jwts += "<b>header decoded</b><br /><i>FAILED TO BASE64DECODE</i><br />";
                                }
                                  jwts += "<b>payload</b><br /><i>" +  payload + "</i><br />";
                                    try {
                                  jwts += "<b>payload decoded</b><br /><i>" +  b64DecodeUnicode(payload) + "</i><br />";
                                  } catch (err) {
+                                  failed+=1;
                                 jwts += "<b>payload decoded</b><br /><i>FAILED TO BASE64DECODE</i><br />";
                                }
                                  jwts += "<b>signature</b><br /><i>" +  signature + "</i><br />";
+                                 if( failed!=0){
+                                    jwts="";
+                                 }
 
              });
 
