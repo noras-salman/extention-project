@@ -69,7 +69,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#home">Web Info</a></li>
         <li><a data-toggle="tab" href="#menu1">Encoder</a></li>
-        <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+        <li><a data-toggle="tab" href="#menu2">Crypto services</a></li>
     </ul>
 
     <div class="tab-content">
@@ -145,7 +145,7 @@
 
                 <input type="radio" id="hex"
                        name="typ_from" value="hex">
-                <label for="hex">Hex</label>
+                <label for="hex">Hex / Base16</label>
 
                 <input type="radio" id="binary8"
                        name="typ_from" value="binary8">
@@ -155,7 +155,20 @@
                        name="typ_from" value="binary7">
                 <label for="binary7">Binary 7</label>
 
+
+                <input type="radio" id="decimal"
+                       name="typ_from" value="decimal">
+                <label for="decimal">Decimal</label>
+
                 <br/>
+                <input type="radio" id="b32"
+                       name="typ_from" value="b32">
+                <label for="b32">Base32</label>
+
+                <input type="radio" id="b36"
+                       name="typ_from" value="b36">
+                <label for="b36">Base36</label>
+
                 <input type="radio" id="b64"
                        name="typ_from" value="b64">
                 <label for="b64">Base64</label>
@@ -173,6 +186,10 @@
                 <input type="radio" id="caesar"
                        name="typ_from" value="caesar">
                 <label for="caesar">Caesar brutefource</label>
+
+                <input type="radio" id="rot47"
+                       name="typ_from" value="rot47">
+                <label for="rot47">ROT47</label>
 
                 <p>TODO<br /> Ascii85 (also called Base85) Base58  Base16  Geohash <br/> https://en.wikipedia.org/wiki/Binary-to-text_encoding <br/> https://www.dcode.fr/tools-list</p>
 
